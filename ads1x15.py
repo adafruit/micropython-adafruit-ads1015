@@ -79,7 +79,7 @@ _DIFFS = {
 }
 
 
-class ADS1015:
+class ADS1115:
     def __init__(self, i2c, address=0x48):
         self.i2c = i2c
         self.address = address
@@ -101,7 +101,7 @@ class ADS1015:
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_SINGLE |
             _OS_SINGLE | _GAINS[self.gain] | _CHANNELS[channel])
         time.sleep_ms(1)
-        return self._read_register(_REGISTER_CONVERT) >> 4
+        return self._read_register(_REGISTER_CONVERT)
 
     def diff(self, channel1, channel2):
         """Read voltage between two channels. Takes 1ms."""
@@ -109,15 +109,29 @@ class ADS1015:
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_SINGLE |
             _OS_SINGLE | _GAINS[self.gain] | _DIFFS[(channel1, channel2)])
         time.sleep_ms(1)
-        return self._read_register(_REGISTER_CONVERT) >> 4
+        return self._read_register(_REGISTER_CONVERT)
 
     def alert_start(self, channel, threshold):
         """Start continuous measurement, set ALERT pin on threshold."""
-        self._write_register(_REGISTER_HITHRESH, threshold << 4)
+        self._write_register(_REGISTER_HITHRESH, threshold)
         self._write_register(_REGISTER_CONFIG, _CQUE_1CONV | _CLAT_LATCH |
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_CONTIN |
             _MODE_CONTIN | _GAINS[self.gain] | _CHANNELS[channel])
 
     def alert_read(self):
         """Get the last reading from the continuous measurement."""
-        return self._read_register(_REGISTER_CONVERT) >> 4
+        return self._read_register(_REGISTER_CONVERT)
+
+
+class ADS1015(ADS1115):
+    def read(self, channel):
+        return super().read(channel) >> 4
+
+    def diff(self, channel1, channel2):
+        return super().diff(channel1, channel2) >> 4
+
+    def alert_start(self, channel, threshold):
+        return super().alert_start(channel, threshold << 4)
+
+    def alert_read(self):
+        return super().alert_read() >> 4
