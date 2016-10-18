@@ -96,7 +96,6 @@ class ADS1115:
         return ustruct.unpack('>h', data)[0]
 
     def read(self, channel):
-        """Read voltage between a channel and GND. Takes 1ms."""
         self._write_register(_REGISTER_CONFIG, _CQUE_NONE | _CLAT_NONLAT |
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_SINGLE |
             _OS_SINGLE | _GAINS[self.gain] | _CHANNELS[channel])
@@ -104,7 +103,6 @@ class ADS1115:
         return self._read_register(_REGISTER_CONVERT)
 
     def diff(self, channel1, channel2):
-        """Read voltage between two channels. Takes 1ms."""
         self._write_register(_REGISTER_CONFIG, _CQUE_NONE | _CLAT_NONLAT |
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_SINGLE |
             _OS_SINGLE | _GAINS[self.gain] | _DIFFS[(channel1, channel2)])
@@ -112,14 +110,12 @@ class ADS1115:
         return self._read_register(_REGISTER_CONVERT)
 
     def alert_start(self, channel, threshold):
-        """Start continuous measurement, set ALERT pin on threshold."""
         self._write_register(_REGISTER_HITHRESH, threshold)
         self._write_register(_REGISTER_CONFIG, _CQUE_1CONV | _CLAT_LATCH |
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_CONTIN |
             _MODE_CONTIN | _GAINS[self.gain] | _CHANNELS[channel])
 
     def alert_read(self):
-        """Get the last reading from the continuous measurement."""
         return self._read_register(_REGISTER_CONVERT)
 
 
