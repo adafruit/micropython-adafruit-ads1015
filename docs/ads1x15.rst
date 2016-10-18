@@ -39,6 +39,9 @@ ADS1x15
 
         Takes 1ms. Returns a number between -65536 and 65535.
 
+        Only measurements between channels 0 and 1 and between any channel and
+        channel 3 are possible.
+
     .. method:: alert_start(channel, threshold)
 
         Start continuous measurement, set ALERT pin on threshold.
