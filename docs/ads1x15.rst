@@ -1,8 +1,11 @@
+ADS1x15
+*******
+
 .. module:: ads1x15
 
 .. class:: ADS1115(i2c, address=0x49)
 
-    .. attr:: gain
+    .. attribute:: gain
 
         Set the gain for all readings.
 
