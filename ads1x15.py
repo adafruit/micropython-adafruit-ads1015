@@ -99,14 +99,16 @@ class ADS1115:
         self._write_register(_REGISTER_CONFIG, _CQUE_NONE | _CLAT_NONLAT |
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_SINGLE |
             _OS_SINGLE | _GAINS[self.gain] | _CHANNELS[channel])
-        time.sleep_ms(1)
+        while not self._read_register(_REGISTER_CONFIG) & _OS_NOTBUSY:
+            time.sleep_ms(1)
         return self._read_register(_REGISTER_CONVERT)
 
     def diff(self, channel1, channel2):
         self._write_register(_REGISTER_CONFIG, _CQUE_NONE | _CLAT_NONLAT |
             _CPOL_ACTVLOW | _CMODE_TRAD | _DR_1600SPS | _MODE_SINGLE |
             _OS_SINGLE | _GAINS[self.gain] | _DIFFS[(channel1, channel2)])
-        time.sleep_ms(1)
+        while not self._read_register(_REGISTER_CONFIG) & _OS_NOTBUSY:
+            time.sleep_ms(1)
         return self._read_register(_REGISTER_CONVERT)
 
     def alert_start(self, channel, threshold):

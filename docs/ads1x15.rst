@@ -31,13 +31,13 @@ ADS1x15
 
         Read voltage between a `channel` and `GND`.
 
-        Takes 1ms. Returns a number between 0 and 65535.
+        Takes several milliseconds. Returns a number between 0 and 65535.
 
     .. method:: diff(channel1, channel2)
 
         Read voltage between two channels.
 
-        Takes 1ms. Returns a number between -65536 and 65535.
+        Takes several milliseconds. Returns a number between -65536 and 65535.
 
         Only measurements between channels 0 and 1 and between any channel and
         channel 3 are possible.
